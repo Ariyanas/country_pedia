@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 
-URL = ""
+URL = "https://countrycode.org"
 
 r = requests.get(URL)
 
@@ -18,21 +18,20 @@ for tr in tbody.findAll('tr'):
     tds = tr.findAll('td')
 
     country['name'] = tds[0].a.text
+    country['isd'] = tds[1].text
 
     code  = tds[2].text
     country['code'] = code[0:2]
     country['code_full'] = code[5:]
-
-    country['isd'] = tds[1].text
     
     countries.append(country)
 
-country_file = 'countries.csv'
+country_file = '../results/countries.csv'
 
-print(countries)
+#print(countries)
 
 with open(country_file, 'w', newline='') as f:
-    wr = csv.DictWriter(f,['name','code','code_full','isd'])
+    wr = csv.DictWriter(f, ['name', 'isd', 'code', 'code_full'])
     wr.writeheader()
     for c in countries:
         wr.writerow(c)
